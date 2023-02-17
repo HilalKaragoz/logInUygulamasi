@@ -1,32 +1,23 @@
 import React, {useState, useEffect} from "react";
 import { SafeAreaView, Text, StyleSheet, ScrollView } from "react-native";
+import CommentInfo from "../Components/CommentInfo";
+import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
+import { getCommentFunction } from "../api";
 
 function Comments(props) {
     const [detail, setDetail] = useState(false);
-    const [commentsList, setCommentsList] = useState();
-    const [loading, setLoading] = useState(false);
 
     const postsId = props.route.params.id;
+    const {data} = useQuery([ 'comments', postsId ], () =>getCommentFunction(postsId))
 
-    useEffect(()=> {
-        const commentsUrl= `https://jsonplaceholder.typicode.com/posts/${postsId}/comments`;
-        setDetail(true)
-        fetch(commentsUrl)
-        .then((response) => response.json())
-        .then((json) => setCommentsList(json))
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false))
-    },[])
 
     return (
         <ScrollView>
             <SafeAreaView style={styles.commentsListView}>
-                {commentsList?.map((item:any, key) => {
+                {data?.map((item:any, key) => {
                     return (
                         <>
-                            <Text style={styles.textName}>NAME:{item.name}</Text>
-                            <Text style={styles.textEmail}>EMAIL:{item.email}</Text>
-                            <Text style={styles.textCommentsBody}>BODY:{item.body}</Text>
+                            <CommentInfo name={item.name} email={item.email} body={item.body} />
                         </>
                     )
                 })}
@@ -42,16 +33,6 @@ const styles = StyleSheet.create ({
         alignItems:'flex-start', 
         justifyContent:'flex-start',
       },
-      textName:{
-        fontSize:20,
-        fontWeight:'bold'
-      },
-      textEmail:{
-        fontSize:15,
-      },
-      textCommentsBody: {
-        fontSize:15,
-      },
-});
+})
 
 export default Comments;

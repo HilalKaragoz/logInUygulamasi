@@ -1,34 +1,25 @@
 import React, {useState, useEffect} from "react";
 import { StyleSheet, SafeAreaView, ScrollView, TextInput, Button, Alert } from "react-native";
+import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
+import { getUserFunction } from "../api";
 
 function Users(props) {
     const [email,setEmail] = useState();
-    const [userList, setUserList] = useState([]);
     const [loading, setLoading] = useState(false);
     const [authenticated,setAuthenticated] = useState(false);
     const [userId,setUserId] = useState(0)
 
-    const emailList=userList.map((item)=> item?.email)
-    //console.log(emailList);
+    const {data} = useQuery(['users'], () => getUserFunction())
+    console.log(data);
 
-    useEffect(() => {
-        const usersUrl = 'https://jsonplaceholder.typicode.com/users';
-        fetch(usersUrl)
-        .then((response) => response.json())
-        .then((json) => setUserList(json))
-        .catch((error) => console.error(error))
-        .finally(() => setLoading(false))
-    }, []) 
-    //console.log(userList);
-
-    
-    useEffect(()=> {}, [email])
-
+    const emailList=data?.map((item)=> item?.email)
 
     function postsToPage() {
-        if(emailList.includes(email)){
-            const authUserId=userList?.find(item=>item.email==email).id
-            //console.log(authUserId);
+        console.log("girdi")
+        console.log(data)
+        if(emailList?.includes(email)){
+            console.log("ife girdi")
+            const authUserId=data?.find(item=>item.email==email).id
             props.navigation.navigate('PostsScreen', {authUserId});
         }
     }
