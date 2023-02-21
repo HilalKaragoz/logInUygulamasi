@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from "react";
-import { StyleSheet, SafeAreaView, ScrollView, TextInput, Button, Alert } from "react-native";
+import React, {useState} from "react";
+import { StyleSheet, SafeAreaView, TextInput, Text, TouchableOpacity } from "react-native";
 import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
 import { getUserFunction } from "../api";
+import FormInput from "../Components/FormInput";
+
 
 function Users(props) {
-    const [email,setEmail] = useState();
-    const [loading, setLoading] = useState(false);
-    const [authenticated,setAuthenticated] = useState(false);
-    const [userId,setUserId] = useState(0)
+    const [email,setEmail] = useState('');
+    const [showPassword, setshowPassword] = useState(false);
 
     const {data} = useQuery(['users'], () => getUserFunction())
     console.log(data);
@@ -25,19 +25,25 @@ function Users(props) {
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.container}>
             <TextInput
             style={styles.input}
             placeholder='E-Mail'
+            keyboardType="email-address"
             onChangeText={setEmail}
-            >
-            </TextInput>
-            <Button
-            title="Press me"
-            color="#f194ff"
-            onPress={postsToPage}
-            style={styles.button}
-            />    
+            value={email}
+            />
+           <FormInput 
+                onPress={() => setshowPassword(!showPassword)} 
+                secureTextEntry={showPassword} 
+                leftIconName='lock-open' 
+                rightIconName='remove-red-eye' 
+                placeholder='Password'
+            />
+            <TouchableOpacity style={styles.button} onPress={postsToPage} disabled={email==""}>
+                <Text style={styles.button_text}>PRESS ME</Text>
+            </TouchableOpacity>
+            
         </SafeAreaView>
     )
 }
@@ -45,23 +51,56 @@ function Users(props) {
 const styles = StyleSheet.create ({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        flexDirection:'row',
-        alignItems: 'flex-start',
-        justifyContent: 'space-around',
+        backgroundColor: '#FAEBD7',
     },
     input:{
-        height: 40,
-        margin: 12,
+        marginTop: 12,
         borderWidth: 1,
         borderRadius:6,
         borderColor:'#DDD',
         padding: 10,
-      },
-      button:{
-        margin:12,
+        backgroundColor: '#fff',
+        fontSize: 18,
+        height: 50,
+        width: '90%',
+        alignSelf: 'center',
+    },
+    password: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: '#DDD',
+        margin: 12,
+        borderWidth:1,
+        borderRadius: 6,
+        borderColor: '#ddd',
+        paddingHorizontal: 10,
+        backgroundColor: '#fff'
+    },
+    password_textBody: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    password_Text: {
+        color: 'grey',
+        fontSize: 18,
+    },
+    password_Icon: {
+        color: '#FF7F50',
+        fontSize: 30,
+    },
+    button:{
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FF7F50',
+        borderRadius: 6,
+        height: 50,
+        width: '90%',
+        alignSelf: 'center',
       },
+    button_text: {
+        fontSize: 18,
+        color: '#fff'
+    },
 });
 export default Users;

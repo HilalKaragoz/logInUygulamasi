@@ -21,11 +21,11 @@ function Router() {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="UsersScreen" component={Users}/>
-          <Stack.Screen name="PostsScreen" component={Posts}/>
-          <Stack.Screen name="CommentsScreen" component={Comments}/>
+          <Stack.Screen name="UsersScreen" component={Users} options={{title:"Users Screen"}} />
+          <Stack.Screen name="PostsScreen" component={Posts} options={{title:"Posts Screen"}}/>
+          <Stack.Screen name="CommentsScreen" component={Comments} options={{title:"Comments Screen"}}/>
         </Stack.Navigator>
-      </NavigationContainer>  
+      </NavigationContainer>    
     </QueryClientProvider>
   )
 }

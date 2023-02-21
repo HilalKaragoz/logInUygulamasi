@@ -1,11 +1,10 @@
-import React, {useState,useEffect} from "react";
-import { SafeAreaView, StyleSheet, Text, Button, ScrollView } from "react-native";
+import React from "react";
+import { SafeAreaView, StyleSheet, Button, ScrollView, View, FlatList } from "react-native";
 import PostInfo from "../Components/PostInfo";
 import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
 import { getPostFunction } from "../api";
 
 function Posts(props) {
-  const [authenticated,setAuthenticated] = useState(false)
 
   const authUserId = props.route.params.authUserId;
   const {data} = useQuery([ 'posts', authUserId ], () => getPostFunction(authUserId))
@@ -14,21 +13,30 @@ function Posts(props) {
     props.navigation.navigate('CommentsScreen', {id});
   }
   return (
-    <ScrollView>  
+    <View style={styles.container} >  
       <SafeAreaView style={styles.postListView}>
-        {data?.map((item:any, key) => {
+        {/* {data?.map((item:any, index) => {
           return (
-            <>
+            <View key={index}>
               <PostInfo id={item.id} title={item.title} body={item.body} />
               <Button title='Detail' onPress={() => commentsToPage(item.id)}/>
-            </>
-        )})}
+            </View>
+        )})} */}
+        <FlatList  data={data} keyExtractor={(item) => item.id} renderItem={({item, index}) => {
+          return (
+            <View key={index}>
+              <PostInfo id={item.id} title={item.title} body={item.body} />
+              <Button title='Detail' onPress={() => commentsToPage(item.id)}/>
+            </View>
+        )
+        }}  />
       </SafeAreaView>            
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create ({
+  container:{flex:1},
       postListView: {
         padding:10,
         flex:1, 

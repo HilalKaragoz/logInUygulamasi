@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from "react";
-import { SafeAreaView, Text, StyleSheet, ScrollView } from "react-native";
+import React from "react";
+import { SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import CommentInfo from "../Components/CommentInfo";
 import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
 import { getCommentFunction } from "../api";
 
 function Comments(props) {
-    const [detail, setDetail] = useState(false);
 
     const postsId = props.route.params.id;
     const {data} = useQuery([ 'comments', postsId ], () =>getCommentFunction(postsId))
